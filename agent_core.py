@@ -6,6 +6,19 @@ import uvicorn
 
 app = FastAPI(title="GSF-Claw Core API")
 
+# --- 新增：读取 SOUL 文件的函数 ---
+def load_soul():
+    soul_path = os.path.join(os.path.dirname(__file__), 'SOUL.md')
+    try:
+        with open(soul_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        print("⚠️ 未找到 SOUL.md，使用默认人格。")
+        return "你是一个有用的桌面 AI 助手。"
+
+# 在应用启动时加载 SOUL
+SYSTEM_SOUL = load_soul()
+
 memory_db = {}
 
 class ChatRequest(BaseModel):
